@@ -1,16 +1,38 @@
-server:
-  port: 8761
 spring:
   application:
-    name: eureka
+    name: eureka-cluster
   config:
     import: optional:configserver:${CONFIG_SERVER_URL:http://localhost:8888/}
 eureka:
-  client:
-    registerWithEureka: false
-    fetchRegistry: false
+  instance:
+    hostname: localhost
+    prefer-ip-address: false
+    appname: eureka-cluster
   server:
     waitTimeInMsWhenSyncEmpty: 0
+  client:
+    service-url: localhost
+scs:
+  service-registry:
+    app-id: ${vcap.application.application_id}
+    uri: ${vcap.application.uris[0]}
+    authorization-uri: ${uaa.authorization-uri}
+    issuer-uri: ${uaa.token-uri}
+    jwk-set-uri: ${uaa.jwk-set-uri}
+    service-instance-id: ${spring.cloud.appbroker.service-instance-id}
+    count: ${count:1}
+    peers: ${peers:}
+    external-peer-polling-interval-seconds: 20
+uaa:
+  token-uri: ${uaa.uri}/oauth/token
+  jwk-set-uri: ${uaa.uri}/token_keys
+
+info:
+  nodeCount: ${scs.service-registry.count:}
+  service-instance-id: ${scs.service-registry.service-instance-id}
+  issuer: ${uaa.token-uri}
+  jwk-set-uri: ${uaa.jwk-set-uri}
+
 management:
   endpoints:
     web:
