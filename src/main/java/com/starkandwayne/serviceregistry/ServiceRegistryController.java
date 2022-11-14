@@ -47,7 +47,7 @@ public class ServiceRegistryController {
         System.out.println(peers.CurrentPeers);
         ServiceRegistryApplication.CurrentLoadedPeers = peers;
         System.out.println(ServiceRegistryApplication.CurrentLoadedPeers);
-        ServiceRegistryApplication.RestartApplication();
+       // ServiceRegistryApplication.RestartApplication();
         return ResponseEntity.ok().body(ServiceRegistryApplication.CurrentLoadedPeers);
         }
 }

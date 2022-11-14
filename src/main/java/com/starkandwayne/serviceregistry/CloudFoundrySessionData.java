@@ -1,5 +1,7 @@
 package com.starkandwayne.serviceregistry;
 
+import org.springframework.core.env.ConfigurableEnvironment;
+
 public class CloudFoundrySessionData {
     public String INSTANCE_GUID;
     public String INSTANCE_INDEX;

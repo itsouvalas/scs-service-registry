@@ -7,8 +7,11 @@ import java.util.Properties;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
 
 
 @SpringBootApplication
@@ -26,62 +29,24 @@ public class ServiceRegistryApplication {
 
 		CurrentArgs = args;
 		Application = new SpringApplication(ServiceRegistryApplication.class);
-		setupConfiguration();
-		Application.setDefaultProperties(SetApplicationConfigruation( CurrentLoadedPeers.GetPeersAsString()));
 		ApplicationContext = Application.run(args);
 
 	}
 
 	public static void RestartApplication() {
 	
-
 		Thread thread = new Thread(() -> {
-			
-            ApplicationContext.close();
+	       ApplicationContext.close();
 			Application = new SpringApplication(ServiceRegistryApplication.class);
-			Application.setDefaultProperties(SetApplicationConfigruation( CurrentLoadedPeers.GetPeersAsString()));
             ApplicationContext = Application.run(CurrentArgs);
 		});
 		thread.setDaemon(false);
         thread.start();
 	}
 
-	public static Properties SetApplicationConfigruation(String peersJSON) {
-		Properties properties = new Properties();
-
-		if (CurrentLoadedPeers.CurrentPeers.size() > 0) {
-			System.out.println("Peers Detected");
-			properties.setProperty("eureka.client.serviceUrl.defaultZone",peersJSON);
-			properties.setProperty("eureka.client.registerWithEureka", "true");
-			properties.setProperty("eureka.client.fetchRegistry", "true");
-			System.out.println(properties);
-		}
-		else
-		{
-			System.out.println("No Peers Detected");
-			properties.setProperty("eureka.client.serviceUrl.defaultZone", "http://localhost:8080/eureka");
-			properties.setProperty("eureka.client.registerWithEureka", "false");
-			properties.setProperty("eureka.client.fetchRegistry", "false");
-			System.out.println(properties);
-		}
-		String index = "0";
-		if (SessionData.INSTANCE_INDEX != null) {
-			index = SessionData.INSTANCE_INDEX;
-		}
-		else
-		{
-			System.out.println("Value  INDEX " + SessionData.INSTANCE_INDEX);
-		}
-		ServerPort = "8761";
-		System.out.println("Attempting to host on port " + ServerPort);
-		properties.setProperty("server.port", ServerPort);
-		return properties;
-		
-	}
-
-	public static void setupConfiguration() {
-		SessionData = CloudFoundrySessionData.GetEnvironment();
-		CurrentLoadedPeers = Peers.LoadPeersFromENV();
-	}
+	@Bean
+public RestTemplate restTemplate() {
+    return new RestTemplate();
+}
 
 }
