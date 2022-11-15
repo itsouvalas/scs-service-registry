@@ -1,0 +1,18 @@
+eureka:
+  instance:
+    hostname: ${vcap.application.uris[0]}
+    secure-port: 443
+    secure-port-enabled: true
+    non-secure-port-enabled: false
+
+    # FIXME: remove the following two settings when this issue is resolved and released: https://github.com/spring-cloud/spring-cloud-netflix/issues/3655
+    secure-health-check-url: https://${eureka.instance.hostname}/actuator/health
+    status-page-url: https://${eureka.instance.hostname}/actuator/info
+  client:
+    # Get the new eureka server to fetch registry from the existing one at
+    # startup, so the new eureka can start "hot" and won't enforce a warmup
+    # period.
+    fetch-registry: true
+  server:
+    # try to sync up with the existing eureka for 0-downtime upgrades
+    registry-sync-retries: 1

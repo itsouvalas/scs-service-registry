@@ -3,6 +3,8 @@ package com.starkandwayne.serviceregistry.environment;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.starkandwayne.serviceregistry.ScsPeerInfo;
+import com.starkandwayne.serviceregistry.ServiceRegistryApplication;
+
 import java.net.URI;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
@@ -55,6 +57,14 @@ class ExternalPeerInfoCollector implements InitializingBean {
 
    public void afterPropertiesSet() throws Exception {
       String peersSetByBrokerString = this.environment.getProperty("scs.service-registry.peers");
+      if (ServiceRegistryApplication.CurrentLoadedPeers != null)
+      if ( ServiceRegistryApplication.CurrentLoadedPeers.size() > 0) {
+         ServiceRegistryApplication.CurrentLoadedPeers.forEach((peer) -> {
+            this.peerInfoCompletionService.submit(() -> {
+               return peer;
+            });
+         });
+      }
       if (!StringUtils.isEmpty(peersSetByBrokerString)) {
          List<PeerConfigUserInput> peersSetByBroker = this.objectMapper.readValue(peersSetByBrokerString, new TypeReference<List<PeerConfigUserInput>>(){});
          this.unresolvedPeerCount.set(peersSetByBroker.size());
