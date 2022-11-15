@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.starkandwayne</groupId>
 	<artifactId>service-registry</artifactId>
-	<version>1.0.1-3.1.37</version>
+	<version>1.2.0-3.1.37</version>
 	<name>service-registry</name>
 	<description>Service Registry for Stark And Wayne</description>
 	<properties>
@@ -38,6 +38,7 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter-webflux</artifactId> </dependency>
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
