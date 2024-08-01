@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.starkandwayne</groupId>
 	<artifactId>service-registry</artifactId>
-	<version>1.2.0-3.1.37</version>
+	<version>2.0.0-3.4.0</version>
 	<name>service-registry</name>
 	<description>Service Registry for Stark And Wayne</description>
 	<properties>
